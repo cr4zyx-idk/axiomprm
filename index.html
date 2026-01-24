@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axiom Prompt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --accent-white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glow-color: rgba(255, 255, 255, 0.15);
+            --text-main: #e0e0e0;
+            --text-dim: #a0a0a0;
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #0a0a0a, #151515, #0a0a0a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .decoration-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation: floatShape 20s infinite alternate ease-in-out;
+        }
+
+        .shape-1 { width: 400px; height: 400px; top: -100px; left: -100px; }
+        .shape-2 { width: 300px; height: 300px; bottom: -100px; right: -100px; animation-delay: -5s; }
+        .shape-3 { width: 200px; height: 200px; top: 20%; right: 5%; animation-delay: -10s; }
+
+        @keyframes floatShape {
+            0% { transform: translate(0, 0) rotate(0deg); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            100% { transform: translate(50px, 100px) rotate(90deg); border-radius: 50% 50% 20% 80% / 25% 80% 20% 75%; }
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--accent-white);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: drift 10s infinite linear;
+        }
+
+        @keyframes drift {
+            from { transform: translateY(0) translateX(0); opacity: 0.1; }
+            to { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        .background-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            padding: 60px 20px 40px;
+            text-align: center;
+            animation: fadeInDown 1s ease-out;
+            position: relative;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulseGlow 4s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+        }
+
+        .logo-container img {
+            height: 80px;
+            filter: drop-shadow(0 0 15px var(--glow-color));
+            transition: var(--transition-smooth);
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 25px var(--accent-white));
+        }
+
+        .title-main {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .subtitle-main {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            opacity: 0.8;
+        }
+
+        /* Integrated Search & Filter UI */
+        .controls-wrapper {
+            max-width: 700px;
+            margin: 40px auto 0;
+            padding: 0 20px;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .controls-inner {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 14px 14px 14px 50px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-box {
+            border-left: 1px solid var(--glass-border);
+            padding-left: 8px;
+        }
+
+        .filter-select {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            border-radius: 18px;
+            padding: 12px 25px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+            padding-right: 35px;
+        }
+
+        .filter-select:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--glass-border);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 60px 0 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--accent-white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-title i {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+        }
+
+        .card-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-white);
+            margin-bottom: 8px;
+        }
+
+        .card-creator {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 25px;
+            min-height: 60px;
+        }
+
+        .card-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .price-tag {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-white);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: var(--accent-white);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            background: #e0e0e0;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--accent-white);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-white);
+        }
+
+        .btn-full {
+            grid-column: span 2;
+        }
+
+        .locked-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+            text-align: center;
+            background: var(--glass-bg);
+            border: 1px dashed var(--glass-border);
+            border-radius: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .title-main { font-size: 2.2rem; }
+            .subtitle-main { font-size: 0.7rem; letter-spacing: 4px; }
+            .grid-layout { grid-template-columns: 1fr; }
+            .container { padding: 0 15px 60px; }
+            .controls-inner { flex-direction: column; padding: 15px; }
+            .search-box { width: 100%; }
+            .filter-box { border-left: none; border-top: 1px solid var(--glass-border); padding-left: 0; padding-top: 15px; width: 100%; }
+            .filter-select { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="decoration-layer" id="decoration-layer">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    <div class="background-glow"></div>
+
+    <header>
+        <div class="logo-container">
+            <img src="src/img/logo.png" alt="Axiom Logo">
+        </div>
+        <h1 class="title-main">Axiom Prompt</h1>
+        <p class="subtitle-main">Jailbreak Prompt Repository</p>
+    </header>
+
+    <div class="controls-wrapper">
+        <div class="controls-inner">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-input" class="search-input" placeholder="Explore the repository...">
+            </div>
+            <div class="filter-box">
+                <select id="sort-select" class="filter-select">
+                    <option value="oldest">Oldest to Newest</option>
+                    <option value="newest">Newest to Oldest</option>
+                    <option value="az">A-Z</option>
+                    <option value="za">Z-A</option>
+                    <option value="highest">Highest to Lowest</option>
+                    <option value="lowest">Lowest to Highest</option>
+                    <option value="available">Available</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <section id="shop-section">
+            <h2 class="section-title"><i class="fa-solid fa-cart-shopping"></i> Jailbreak Shop</h2>
+            <div id="shop-grid" class="grid-layout"></div>
+        </section>
+
+        <section id="free-section">
+            <h2 class="section-title"><i class="fa-solid fa-bolt"></i> Free Jailbreak</h2>
+            <div id="free-grid" class="grid-layout"></div>
+        </section>
+    </main>
+
+    <script>
+        const shopData = [
+            /* {
+                id: 1,
+                name: "Master Architect",
+                desc: "Prompt tingkat lanjut untuk merancang arsitektur sistem yang kompleks dengan detail teknis tinggi.",
+                creator: "Ruinx",
+                price: 50000,
+                priceText: "Rp 50.000",
+                timestamp: 1700000000000
+            } */
+        ];
+
+        const freeData = [
+            /* {
+                id: 1,
+                name: "ZuraX",
+                desc: "Prompt jailbreak free yang bisa menjawab semua hal ilegal. Work on: Grok, Deepseek, Gemini, etc",
+                creator: "Ruinx",
+                path: "#",
+                timestamp: 1700000000000
+            } */
+        ];
+
+        const waNumber = "62895808242300";
+
+        function createShopCard(item) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            const messageOvo = encodeURIComponent(`Halo, saya ingin membeli prompt ${item.name} dengan harga ${item.priceText} melalui metode pembayaran Ovo. Mohon informasi terkait proses selanjutnya. Terima kasih.`);
+            const messageGopay = encodeURIComponent(`Halo, saya ingin membeli prompt ${item.name} dengan harga ${item.priceText} melalui metode pembayaran GoPay. Mohon informasi terkait proses selanjutnya. Terima kasih.`);
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-name">${item.name}</div>
+                    <div class="card-creator"><i class="fa-solid fa-user-ninja"></i> ${item.creator}</div>
+                </div>
+                <div class="card-desc">${item.desc}</div>
+                <div class="card-footer">
+                    <div class="price-tag">${item.priceText}</div>
+                    <div class="btn-group">
+                        <a href="https://wa.me/${waNumber}?text=${messageOvo}" class="btn btn-primary">
+                            <i class="fa-solid fa-money-bills"></i> Ovo
+                        </a>
+                        <a href="https://wa.me/${waNumber}?text=${messageGopay}" class="btn btn-outline">
+                            <i class="fa-solid fa-wallet"></i> GoPay
+                        </a>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function createFreeCard(item) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            const isLocked = item.path === "#";
+            
+            card.innerHTML = `
+                ${isLocked ? '<div class="locked-badge"><i class="fa-solid fa-lock"></i> Locked</div>' : ''}
+                <div class="card-header">
+                    <div class="card-name">${item.name}</div>
+                    <div class="card-creator"><i class="fa-solid fa-user-ninja"></i> ${item.creator}</div>
+                </div>
+                <div class="card-desc">${item.desc}</div>
+                <div class="card-footer">
+                    <a href="${isLocked ? 'javascript:void(0)' : item.path}" class="btn ${isLocked ? 'btn-outline' : 'btn-primary'} btn-full" ${isLocked ? 'style="opacity: 0.5; cursor: not-allowed;"' : 'download'}>
+                        <i class="fa-solid ${isLocked ? 'fa-clock' : 'fa-download'}"></i> 
+                        ${isLocked ? 'Coming Soon' : 'Get File'}
+                    </a>
+                </div>
+            `;
+            return card;
+        }
+
+        function sortData(data, sortType) {
+            const sorted = [...data];
+            switch(sortType) {
+                case 'az':
+                    return sorted.sort((a, b) => a.name.localeCompare(b.name));
+                case 'za':
+                    return sorted.sort((a, b) => b.name.localeCompare(a.name));
+                case 'highest':
+                    return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+                case 'lowest':
+                    return sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+                case 'newest':
+                    return sorted.sort((a, b) => b.timestamp - a.timestamp);
+                case 'oldest':
+                    return sorted.sort((a, b) => a.timestamp - b.timestamp);
+                case 'available':
+                    return sorted.filter(item => item.path !== "#");
+                default:
+                    return sorted;
+            }
+        }
+
+        function renderCards() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const sortType = document.getElementById('sort-select').value;
+            
+            const shopGrid = document.getElementById('shop-grid');
+            const freeGrid = document.getElementById('free-grid');
+
+            shopGrid.innerHTML = '';
+            freeGrid.innerHTML = '';
+
+            let filteredShop = shopData.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) || 
+                item.desc.toLowerCase().includes(searchTerm)
+            );
+            
+            if (sortType !== 'available') {
+                filteredShop = sortData(filteredShop, sortType);
+            }
+
+            let filteredFree = freeData.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) || 
+                item.desc.toLowerCase().includes(searchTerm)
+            );
+
+            if (sortType === 'available') {
+                filteredFree = filteredFree.filter(item => item.path !== "#");
+            } else {
+                filteredFree = sortData(filteredFree, sortType);
+            }
+
+            if (filteredShop.length > 0) {
+                filteredShop.forEach((item, index) => {
+                    const card = createShopCard(item);
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    shopGrid.appendChild(card);
+                });
+            } else {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.innerHTML = `<i class="fa-solid fa-box-open"></i><p>The shop is still empty</p>`;
+                shopGrid.appendChild(empty);
+            }
+
+            if (filteredFree.length > 0) {
+                filteredFree.forEach((item, index) => {
+                    const card = createFreeCard(item);
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    freeGrid.appendChild(card);
+                });
+            } else {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.innerHTML = `<i class="fa-solid fa-folder-open"></i><p>No free prompts found</p>`;
+                freeGrid.appendChild(empty);
+            }
+        }
+
+        function createParticles() {
+            const layer = document.getElementById('decoration-layer');
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 3 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                layer.appendChild(particle);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards();
+            createParticles();
+            document.getElementById('search-input').addEventListener('input', renderCards);
+            document.getElementById('sort-select').addEventListener('change', renderCards);
+        });
+    </script>
+</body>
+</html>
