@@ -285,21 +285,21 @@
             gap: 8px;
             overflow-x: auto;
             padding: 5px 2px 15px;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none;  /* IE/Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
             mask-image: linear-gradient(to right, black 85%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
         }
 
         .category-menu::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
+            display: none;
         }
 
         .category-btn {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             padding: 8px 16px;
-            border-radius: 50px; /* Pill shape for ergonomics */
+            border-radius: 50px;
             color: var(--text-dim);
             font-size: 0.75rem;
             font-weight: 600;
@@ -357,25 +357,10 @@
             animation: fadeInUp 0.8s ease-out backwards;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transition: 0.5s;
-        }
-
-        .card:hover::before {
-            left: 100%;
-        }
-
         .card:hover {
             transform: translateY(-10px);
             border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         .card-header {
@@ -403,16 +388,41 @@
             font-size: 0.9rem;
             color: var(--text-dim);
             margin-bottom: 25px;
+            white-space: pre-line;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            transition: max-height 0.4s ease;
         }
+
+        .card-desc.expanded {
+            -webkit-line-clamp: unset;
+            display: block;
+        }
+
+        .read-more-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent-white);
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            opacity: 0.6;
+        }
+
+        .read-more-btn:hover { opacity: 1; }
 
         .card-footer {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
             gap: 15px;
         }
 
@@ -421,12 +431,14 @@
             font-weight: 700;
             color: var(--accent-white);
             font-size: 1.1rem;
+            margin-bottom: 5px;
         }
 
+        /* RESTORED BUTTON LAYOUT */
         .btn-group {
             display: flex;
             gap: 8px;
-            flex: 1;
+            width: 100%;
         }
 
         .btn {
@@ -443,13 +455,13 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
+            flex: 1;
         }
 
         .btn-primary {
             background: var(--accent-white);
             color: var(--bg-dark);
             border: 1px solid var(--accent-white);
-            flex: 1;
         }
 
         .btn-primary:hover {
@@ -462,7 +474,6 @@
             background: transparent;
             color: var(--text-main);
             border: 1px solid var(--glass-border);
-            flex: 1;
         }
 
         .btn-outline:hover {
@@ -526,7 +537,6 @@
             .filter-select { width: 100%; }
             .grid-layout { grid-template-columns: 1fr; }
             .btn-group { flex-direction: column; }
-            .category-menu { mask-image: none; -webkit-mask-image: none; }
         }
     </style>
 </head>
@@ -544,7 +554,7 @@
             <img src="src/img/logo.png" alt="Axiom Logo">
         </div>
         <h1 class="title-main">Axiom Prompt</h1>
-        <p class="subtitle-main">Premium Prompt Engineering</p>
+        <p class="subtitle-main">Prompt Repository</p>
     </header>
 
     <div class="controls-wrapper">
@@ -570,7 +580,6 @@
     <main class="container">
         <section id="shop-section">
             <h2 class="section-title"><i class="fa-solid fa-cart-shopping"></i> Jailbreak Shop</h2>
-            <!-- Menu Kategori Shop -->
             <div class="category-menu-wrapper">
                 <div id="shop-category-menu" class="category-menu"></div>
             </div>
@@ -581,7 +590,6 @@
 
         <section id="free-section">
             <h2 class="section-title"><i class="fa-solid fa-bolt"></i> Free Jailbreak</h2>
-            <!-- Menu Kategori Free -->
             <div class="category-menu-wrapper">
                 <div id="free-category-menu" class="category-menu"></div>
             </div>
@@ -593,10 +601,9 @@
         // ==========================================
         // EDITABLE CATEGORIES CONFIGURATION
         // ==========================================
-        
         const shopCategories = [
             { id: 'all', name: 'All Prompts', icon: 'fa-layer-group' },
-            { id: 'ransomgpt', name: 'RansomGPT', icon: 'fa-bug' },
+            { id: 'ransomgpt', name: 'RansomGPT', icon: 'fa-bug' }
         ];
 
         const freeCategories = [
@@ -608,17 +615,16 @@
         // ==========================================
         // DATA PROMPT
         // ==========================================
-        
         const shopData = [
-            /* {
+             /* {
                 id: 1,
                 name: "Master Architect",
-                desc: "Prompt tingkat lanjut untuk merancang arsitektur sistem yang kompleks dengan detail teknis tinggi.",
+                desc: "Prompt tingkat lanjut untuk merancang arsitektur sistem yang kompleks.\nGunakan prompt ini untuk hasil maksimal.",
                 creator: "Ruinx",
                 price: 50000,
                 priceText: "Rp 50.000",
                 timestamp: 1700000000000,
-                category: ["premium", "utility"]
+                category: ["premium"]
             } */
         ];
 
@@ -626,7 +632,7 @@
             {
                 id: 1,
                 name: "ZuraX",
-                desc: "Prompt jailbreak free yang bisa menjawab semua hal ilegal. Work on: Grok, Deepseek, Gemini, etc",
+                desc: "Prompt jailbreak free yang bisa menjawab semua hal ilegal.\nWork on: Grok, Deepseek, Gemini, etc.",
                 creator: "Ruinx",
                 path: "src/txt/zurax.txt",
                 timestamp: 1700000000000,
@@ -635,7 +641,7 @@
             {
                 id: 2,
                 name: "Velix.AI",
-                desc: "Prompt jailbreak free yang berukuran besar serta bisa menjawab semua hal ilegal. Work on: Grok, Deepseek, Gemini, etc",
+                desc: "Prompt jailbreak free yang berukuran besar serta bisa menjawab semua hal ilegal.\nWork on: Grok, Deepseek, Gemini, etc.",
                 creator: "Harry",
                 path: "src/txt/velix.txt",
                 timestamp: 1700000000000,
@@ -643,7 +649,6 @@
             }
         ];
 
-        // State
         let activeShopCategory = 'all';
         let activeFreeCategory = 'all';
         const waNumber = "62895808242300";
@@ -651,6 +656,14 @@
         // ==========================================
         // CORE FUNCTIONS
         // ==========================================
+
+        function toggleDescription(btn, descId) {
+            const desc = document.getElementById(descId);
+            const isExpanded = desc.classList.toggle('expanded');
+            btn.innerHTML = isExpanded ? 
+                `<i class="fa-solid fa-chevron-up"></i> Show Less` : 
+                `<i class="fa-solid fa-chevron-down"></i> Read More`;
+        }
 
         function renderCategoryMenus() {
             const shopMenu = document.getElementById('shop-category-menu');
@@ -661,11 +674,7 @@
                 const btn = document.createElement('button');
                 btn.className = `category-btn ${activeShopCategory === cat.id ? 'active' : ''}`;
                 btn.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.name}`;
-                btn.onclick = () => {
-                    activeShopCategory = cat.id;
-                    renderCategoryMenus();
-                    renderCards();
-                };
+                btn.onclick = () => { activeShopCategory = cat.id; renderCategoryMenus(); renderCards(); };
                 shopMenu.appendChild(btn);
             });
 
@@ -674,11 +683,7 @@
                 const btn = document.createElement('button');
                 btn.className = `category-btn ${activeFreeCategory === cat.id ? 'active' : ''}`;
                 btn.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.name}`;
-                btn.onclick = () => {
-                    activeFreeCategory = cat.id;
-                    renderCategoryMenus();
-                    renderCards();
-                };
+                btn.onclick = () => { activeFreeCategory = cat.id; renderCategoryMenus(); renderCards(); };
                 freeMenu.appendChild(btn);
             });
         }
@@ -686,6 +691,7 @@
         function createShopCard(item) {
             const card = document.createElement('div');
             card.className = 'card';
+            const descId = `desc-shop-${item.id}`;
             const messageOvo = encodeURIComponent(`Halo, saya ingin membeli prompt ${item.name} dengan harga ${item.priceText} melalui metode pembayaran Ovo. Mohon informasi terkait proses selanjutnya. Terima kasih.`);
             const messageGopay = encodeURIComponent(`Halo, saya ingin membeli prompt ${item.name} dengan harga ${item.priceText} melalui metode pembayaran GoPay. Mohon informasi terkait proses selanjutnya. Terima kasih.`);
 
@@ -694,12 +700,19 @@
                     <div class="card-name">${item.name}</div>
                     <div class="card-creator"><i class="fa-solid fa-user-ninja"></i> ${item.creator}</div>
                 </div>
-                <div class="card-desc">${item.desc}</div>
+                <div id="${descId}" class="card-desc">${item.desc}</div>
+                <button class="read-more-btn" onclick="toggleDescription(this, '${descId}')">
+                    <i class="fa-solid fa-chevron-down"></i> Read More
+                </button>
                 <div class="card-footer">
                     <div class="price-tag">${item.priceText}</div>
                     <div class="btn-group">
-                        <a href="https://wa.me/${waNumber}?text=${messageOvo}" class="btn btn-primary"><i class="fa-solid fa-money-bills"></i> Ovo</a>
-                        <a href="https://wa.me/${waNumber}?text=${messageGopay}" class="btn btn-outline"><i class="fa-solid fa-wallet"></i> GoPay</a>
+                        <a href="https://wa.me/${waNumber}?text=${messageOvo}" class="btn btn-primary">
+                            <i class="fa-solid fa-money-bills"></i> Ovo
+                        </a>
+                        <a href="https://wa.me/${waNumber}?text=${messageGopay}" class="btn btn-outline">
+                            <i class="fa-solid fa-wallet"></i> GoPay
+                        </a>
                     </div>
                 </div>
             `;
@@ -709,41 +722,27 @@
         function createFreeCard(item) {
             const card = document.createElement('div');
             card.className = 'card';
+            const descId = `desc-free-${item.id}`;
             const isLocked = item.path === "#";
+            
             card.innerHTML = `
                 ${isLocked ? '<div class="locked-badge"><i class="fa-solid fa-lock"></i> Locked</div>' : ''}
                 <div class="card-header">
                     <div class="card-name">${item.name}</div>
                     <div class="card-creator"><i class="fa-solid fa-user-ninja"></i> ${item.creator}</div>
                 </div>
-                <div class="card-desc">${item.desc}</div>
+                <div id="${descId}" class="card-desc">${item.desc}</div>
+                <button class="read-more-btn" onclick="toggleDescription(this, '${descId}')">
+                    <i class="fa-solid fa-chevron-down"></i> Read More
+                </button>
                 <div class="card-footer">
                     <a href="${isLocked ? 'javascript:void(0)' : item.path}" class="btn ${isLocked ? 'btn-outline' : 'btn-primary'} btn-full" ${isLocked ? 'style="opacity: 0.5; cursor: not-allowed;"' : 'download'}>
-                        <i class="fa-solid ${isLocked ? 'fa-clock' : 'fa-download'}"></i> ${isLocked ? 'Coming Soon' : 'Get File'}
+                        <i class="fa-solid ${isLocked ? 'fa-clock' : 'fa-download'}"></i> 
+                        ${isLocked ? 'Coming Soon' : 'Get File'}
                     </a>
                 </div>
             `;
             return card;
-        }
-
-        function sortData(data, sortType) {
-            const sorted = [...data];
-            switch(sortType) {
-                case 'az': return sorted.sort((a, b) => a.name.localeCompare(b.name));
-                case 'za': return sorted.sort((a, b) => b.name.localeCompare(a.name));
-                case 'highest': return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
-                case 'lowest': return sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
-                case 'newest': return sorted.sort((a, b) => b.timestamp - a.timestamp);
-                case 'oldest': return sorted.sort((a, b) => a.timestamp - b.timestamp);
-                case 'available': return sorted.filter(item => item.path !== "#");
-                default: return sorted;
-            }
-        }
-
-        function checkCategory(itemCategory, activeCategory) {
-            if (activeCategory === 'all') return true;
-            if (Array.isArray(itemCategory)) return itemCategory.includes(activeCategory);
-            return itemCategory === activeCategory;
         }
 
         function renderCards() {
@@ -755,61 +754,62 @@
             shopGrid.innerHTML = '';
             freeGrid.innerHTML = '';
 
-            const isShopTrulyEmpty = shopData.length === 0;
-            let filteredShop = shopData.filter(item => 
-                (item.name.toLowerCase().includes(searchTerm) || item.desc.toLowerCase().includes(searchTerm)) &&
-                checkCategory(item.category, activeShopCategory)
-            );
-            if (sortType !== 'available') filteredShop = sortData(filteredShop, sortType);
+            const checkCat = (itemCat, activeCat) => activeCat === 'all' || (Array.isArray(itemCat) ? itemCat.includes(activeCat) : itemCat === activeCat);
+            const sortFn = (data) => {
+                let s = [...data];
+                if (sortType === 'az') s.sort((a,b) => a.name.localeCompare(b.name));
+                else if (sortType === 'za') s.sort((a,b) => b.name.localeCompare(a.name));
+                else if (sortType === 'highest') s.sort((a,b) => (b.price||0)-(a.price||0));
+                else if (sortType === 'lowest') s.sort((a,b) => (a.price||0)-(b.price||0));
+                else if (sortType === 'newest') s.sort((a,b) => b.timestamp - a.timestamp);
+                else if (sortType === 'oldest') s.sort((a,b) => a.timestamp - b.timestamp);
+                return s;
+            };
 
-            const isFreeTrulyEmpty = freeData.length === 0;
-            let filteredFree = freeData.filter(item => 
-                (item.name.toLowerCase().includes(searchTerm) || item.desc.toLowerCase().includes(searchTerm)) &&
-                checkCategory(item.category, activeFreeCategory)
-            );
-            if (sortType === 'available') filteredFree = filteredFree.filter(item => item.path !== "#");
-            else filteredFree = sortData(filteredFree, sortType);
+            let fShop = shopData.filter(i => (i.name.toLowerCase().includes(searchTerm) || i.desc.toLowerCase().includes(searchTerm)) && checkCat(i.category, activeShopCategory));
+            let fFree = freeData.filter(i => (i.name.toLowerCase().includes(searchTerm) || i.desc.toLowerCase().includes(searchTerm)) && checkCat(i.category, activeFreeCategory));
+            
+            if (sortType === 'available') fFree = fFree.filter(i => i.path !== "#");
+            fShop = sortFn(fShop); fFree = sortFn(fFree);
 
             // Render Shop
-            if (isShopTrulyEmpty) {
+            if (shopData.length === 0) {
                 shopGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><p>Still no prompt for sale</p></div>`;
-            } else if (filteredShop.length > 0) {
-                filteredShop.forEach((item, index) => {
-                    const card = createShopCard(item);
-                    card.style.animationDelay = `${index * 0.1}s`;
-                    shopGrid.appendChild(card);
-                });
+            } else if (fShop.length > 0) {
+                fShop.forEach(i => shopGrid.appendChild(createShopCard(i)));
             } else {
-                shopGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>No prompts found in this category</p></div>`;
+                shopGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>No prompts found</p></div>`;
             }
 
             // Render Free
-            if (isFreeTrulyEmpty) {
+            if (freeData.length === 0) {
                 freeGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>Prompt free has not been released yet</p></div>`;
-            } else if (filteredFree.length > 0) {
-                filteredFree.forEach((item, index) => {
-                    const card = createFreeCard(item);
-                    card.style.animationDelay = `${index * 0.1}s`;
-                    freeGrid.appendChild(card);
-                });
+            } else if (fFree.length > 0) {
+                fFree.forEach(i => freeGrid.appendChild(createFreeCard(i)));
             } else {
-                freeGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>No free prompts found in this category</p></div>`;
+                freeGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>No free prompts found</p></div>`;
             }
+
+            // Check for truncated descriptions
+            document.querySelectorAll('.card-desc').forEach(desc => {
+                if (desc.scrollHeight > desc.clientHeight) {
+                    desc.nextElementSibling.style.display = 'flex';
+                }
+            });
         }
 
         function createParticles() {
             const layer = document.getElementById('decoration-layer');
             for (let i = 0; i < 25; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                const size = Math.random() * 3 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.animationDelay = `${Math.random() * 10}s`;
-                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
-                layer.appendChild(particle);
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const s = Math.random() * 3 + 1;
+                p.style.width = p.style.height = `${s}px`;
+                p.style.left = `${Math.random()*100}%`;
+                p.style.top = `${Math.random()*100}%`;
+                p.style.animationDelay = `${Math.random()*10}s`;
+                p.style.animationDuration = `${Math.random()*10+10}s`;
+                layer.appendChild(p);
             }
         }
 
