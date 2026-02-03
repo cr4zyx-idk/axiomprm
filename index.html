@@ -258,7 +258,7 @@
         .section-title {
             font-size: 1.5rem;
             font-weight: 600;
-            margin: 60px 0 30px;
+            margin: 60px 0 20px;
             display: flex;
             align-items: center;
             gap: 15px;
@@ -270,6 +270,69 @@
         .section-title i {
             font-size: 1.2rem;
             opacity: 0.8;
+        }
+
+        /* Ergonomic Category Menu Styles */
+        .category-menu-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 2px;
+            overflow: hidden;
+        }
+
+        .category-menu {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 5px 2px 15px;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE/Edge */
+            mask-image: linear-gradient(to right, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+        }
+
+        .category-menu::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .category-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 50px; /* Pill shape for ergonomics */
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--accent-white);
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: var(--accent-white);
+            color: var(--bg-dark);
+            border-color: var(--accent-white);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .category-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+            margin: 40px 0;
+            width: 100%;
         }
 
         .grid-layout {
@@ -320,59 +383,64 @@
         }
 
         .card-name {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--accent-white);
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .card-creator {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-dim);
-            font-family: 'JetBrains Mono', monospace;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .card-desc {
             font-size: 0.9rem;
             color: var(--text-dim);
             margin-bottom: 25px;
-            min-height: 60px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .card-footer {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
             gap: 15px;
         }
 
         .price-tag {
-            font-size: 1.1rem;
+            font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
             color: var(--accent-white);
+            font-size: 1.1rem;
         }
 
         .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            display: flex;
+            gap: 8px;
+            flex: 1;
         }
 
         .btn {
-            padding: 12px 15px;
+            padding: 12px 18px;
             border-radius: 12px;
-            border: none;
-            cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
             text-decoration: none;
+            transition: var(--transition-smooth);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: var(--transition-smooth);
+            cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -380,26 +448,30 @@
         .btn-primary {
             background: var(--accent-white);
             color: var(--bg-dark);
+            border: 1px solid var(--accent-white);
+            flex: 1;
         }
 
         .btn-primary:hover {
-            background: #e0e0e0;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: var(--accent-white);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .btn-outline {
             background: transparent;
+            color: var(--text-main);
             border: 1px solid var(--glass-border);
-            color: var(--accent-white);
+            flex: 1;
         }
 
         .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg);
             border-color: var(--accent-white);
         }
 
         .btn-full {
-            grid-column: span 2;
+            width: 100%;
         }
 
         .locked-badge {
@@ -409,36 +481,31 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 1px;
+            backdrop-filter: blur(5px);
             border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .empty-state {
             grid-column: 1 / -1;
-            padding: 60px 20px;
             text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
             background: var(--glass-bg);
-            border: 1px dashed var(--glass-border);
             border-radius: 20px;
-            animation: fadeIn 0.5s ease-out;
+            border: 1px dashed var(--glass-border);
         }
 
         .empty-state i {
             font-size: 3rem;
-            color: var(--text-dim);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             opacity: 0.3;
-        }
-
-        .empty-state p {
-            font-size: 1.1rem;
-            color: var(--text-dim);
-            font-weight: 500;
-            letter-spacing: 1px;
         }
 
         @keyframes fadeInUp {
@@ -451,26 +518,21 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         @media (max-width: 768px) {
             .title-main { font-size: 2.2rem; }
-            .subtitle-main { font-size: 0.7rem; letter-spacing: 4px; }
-            .grid-layout { grid-template-columns: 1fr; }
-            .container { padding: 0 15px 60px; }
             .controls-inner { flex-direction: column; padding: 15px; }
             .search-box { width: 100%; }
             .filter-box { border-left: none; border-top: 1px solid var(--glass-border); padding-left: 0; padding-top: 15px; width: 100%; }
-            .filter-select { width: 100%; text-align: center; }
+            .filter-select { width: 100%; }
+            .grid-layout { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+            .category-menu { mask-image: none; -webkit-mask-image: none; }
         }
     </style>
 </head>
 <body>
     <div class="animated-bg"></div>
-    <div class="decoration-layer" id="decoration-layer">
+    <div id="decoration-layer" class="decoration-layer">
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
         <div class="shape shape-3"></div>
@@ -482,23 +544,23 @@
             <img src="src/img/logo.png" alt="Axiom Logo">
         </div>
         <h1 class="title-main">Axiom Prompt</h1>
-        <p class="subtitle-main">Jailbreak Prompt Repository</p>
+        <p class="subtitle-main">Premium Prompt Engineering</p>
     </header>
 
     <div class="controls-wrapper">
         <div class="controls-inner">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search-input" class="search-input" placeholder="Explore the repository...">
+                <input type="text" id="search-input" class="search-input" placeholder="Search prompts...">
             </div>
             <div class="filter-box">
                 <select id="sort-select" class="filter-select">
-                    <option value="oldest">Oldest to Newest</option>
-                    <option value="newest">Newest to Oldest</option>
-                    <option value="az">A-Z</option>
-                    <option value="za">Z-A</option>
-                    <option value="highest">Highest to Lowest</option>
-                    <option value="lowest">Lowest to Highest</option>
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="az">A - Z</option>
+                    <option value="za">Z - A</option>
+                    <option value="highest">Highest Price</option>
+                    <option value="lowest">Lowest Price</option>
                     <option value="available">Available</option>
                 </select>
             </div>
@@ -508,16 +570,45 @@
     <main class="container">
         <section id="shop-section">
             <h2 class="section-title"><i class="fa-solid fa-cart-shopping"></i> Jailbreak Shop</h2>
+            <!-- Menu Kategori Shop -->
+            <div class="category-menu-wrapper">
+                <div id="shop-category-menu" class="category-menu"></div>
+            </div>
             <div id="shop-grid" class="grid-layout"></div>
         </section>
 
+        <div class="category-divider"></div>
+
         <section id="free-section">
             <h2 class="section-title"><i class="fa-solid fa-bolt"></i> Free Jailbreak</h2>
+            <!-- Menu Kategori Free -->
+            <div class="category-menu-wrapper">
+                <div id="free-category-menu" class="category-menu"></div>
+            </div>
             <div id="free-grid" class="grid-layout"></div>
         </section>
     </main>
 
     <script>
+        // ==========================================
+        // EDITABLE CATEGORIES CONFIGURATION
+        // ==========================================
+        
+        const shopCategories = [
+            { id: 'all', name: 'All Prompts', icon: 'fa-layer-group' },
+            { id: 'ransomgpt', name: 'RansomGPT', icon: 'fa-bug' },
+        ];
+
+        const freeCategories = [
+            { id: 'all', name: 'All Prompts', icon: 'fa-layer-group' },
+            { id: 'jailbreak', name: 'Jailbreak', icon: 'fa-unlock-keyhole' },
+            { id: 'coding', name: 'Coding', icon: 'fa-code' }
+        ];
+
+        // ==========================================
+        // DATA PROMPT
+        // ==========================================
+        
         const shopData = [
             /* {
                 id: 1,
@@ -526,7 +617,8 @@
                 creator: "Ruinx",
                 price: 50000,
                 priceText: "Rp 50.000",
-                timestamp: 1700000000000
+                timestamp: 1700000000000,
+                category: ["premium", "utility"]
             } */
         ];
 
@@ -537,7 +629,8 @@
                 desc: "Prompt jailbreak free yang bisa menjawab semua hal ilegal. Work on: Grok, Deepseek, Gemini, etc",
                 creator: "Ruinx",
                 path: "src/txt/zurax.txt",
-                timestamp: 1700000000000
+                timestamp: 1700000000000,
+                category: ["jailbreak"]
             },
             {
                 id: 2,
@@ -545,16 +638,54 @@
                 desc: "Prompt jailbreak free yang berukuran besar serta bisa menjawab semua hal ilegal. Work on: Grok, Deepseek, Gemini, etc",
                 creator: "Harry",
                 path: "src/txt/velix.txt",
-                timestamp: 1700000000000
+                timestamp: 1700000000000,
+                category: ["jailbreak"]
             }
         ];
 
+        // State
+        let activeShopCategory = 'all';
+        let activeFreeCategory = 'all';
         const waNumber = "62895808242300";
+
+        // ==========================================
+        // CORE FUNCTIONS
+        // ==========================================
+
+        function renderCategoryMenus() {
+            const shopMenu = document.getElementById('shop-category-menu');
+            const freeMenu = document.getElementById('free-category-menu');
+
+            shopMenu.innerHTML = '';
+            shopCategories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `category-btn ${activeShopCategory === cat.id ? 'active' : ''}`;
+                btn.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.name}`;
+                btn.onclick = () => {
+                    activeShopCategory = cat.id;
+                    renderCategoryMenus();
+                    renderCards();
+                };
+                shopMenu.appendChild(btn);
+            });
+
+            freeMenu.innerHTML = '';
+            freeCategories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `category-btn ${activeFreeCategory === cat.id ? 'active' : ''}`;
+                btn.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.name}`;
+                btn.onclick = () => {
+                    activeFreeCategory = cat.id;
+                    renderCategoryMenus();
+                    renderCards();
+                };
+                freeMenu.appendChild(btn);
+            });
+        }
 
         function createShopCard(item) {
             const card = document.createElement('div');
             card.className = 'card';
-            
             const messageOvo = encodeURIComponent(`Halo, saya ingin membeli prompt ${item.name} dengan harga ${item.priceText} melalui metode pembayaran Ovo. Mohon informasi terkait proses selanjutnya. Terima kasih.`);
             const messageGopay = encodeURIComponent(`Halo, saya ingin membeli prompt ${item.name} dengan harga ${item.priceText} melalui metode pembayaran GoPay. Mohon informasi terkait proses selanjutnya. Terima kasih.`);
 
@@ -567,12 +698,8 @@
                 <div class="card-footer">
                     <div class="price-tag">${item.priceText}</div>
                     <div class="btn-group">
-                        <a href="https://wa.me/${waNumber}?text=${messageOvo}" class="btn btn-primary">
-                            <i class="fa-solid fa-money-bills"></i> Ovo
-                        </a>
-                        <a href="https://wa.me/${waNumber}?text=${messageGopay}" class="btn btn-outline">
-                            <i class="fa-solid fa-wallet"></i> GoPay
-                        </a>
+                        <a href="https://wa.me/${waNumber}?text=${messageOvo}" class="btn btn-primary"><i class="fa-solid fa-money-bills"></i> Ovo</a>
+                        <a href="https://wa.me/${waNumber}?text=${messageGopay}" class="btn btn-outline"><i class="fa-solid fa-wallet"></i> GoPay</a>
                     </div>
                 </div>
             `;
@@ -582,9 +709,7 @@
         function createFreeCard(item) {
             const card = document.createElement('div');
             card.className = 'card';
-            
             const isLocked = item.path === "#";
-            
             card.innerHTML = `
                 ${isLocked ? '<div class="locked-badge"><i class="fa-solid fa-lock"></i> Locked</div>' : ''}
                 <div class="card-header">
@@ -594,8 +719,7 @@
                 <div class="card-desc">${item.desc}</div>
                 <div class="card-footer">
                     <a href="${isLocked ? 'javascript:void(0)' : item.path}" class="btn ${isLocked ? 'btn-outline' : 'btn-primary'} btn-full" ${isLocked ? 'style="opacity: 0.5; cursor: not-allowed;"' : 'download'}>
-                        <i class="fa-solid ${isLocked ? 'fa-clock' : 'fa-download'}"></i> 
-                        ${isLocked ? 'Coming Soon' : 'Get File'}
+                        <i class="fa-solid ${isLocked ? 'fa-clock' : 'fa-download'}"></i> ${isLocked ? 'Coming Soon' : 'Get File'}
                     </a>
                 </div>
             `;
@@ -605,79 +729,71 @@
         function sortData(data, sortType) {
             const sorted = [...data];
             switch(sortType) {
-                case 'az':
-                    return sorted.sort((a, b) => a.name.localeCompare(b.name));
-                case 'za':
-                    return sorted.sort((a, b) => b.name.localeCompare(a.name));
-                case 'highest':
-                    return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
-                case 'lowest':
-                    return sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
-                case 'newest':
-                    return sorted.sort((a, b) => b.timestamp - a.timestamp);
-                case 'oldest':
-                    return sorted.sort((a, b) => a.timestamp - b.timestamp);
-                case 'available':
-                    return sorted.filter(item => item.path !== "#");
-                default:
-                    return sorted;
+                case 'az': return sorted.sort((a, b) => a.name.localeCompare(b.name));
+                case 'za': return sorted.sort((a, b) => b.name.localeCompare(a.name));
+                case 'highest': return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+                case 'lowest': return sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+                case 'newest': return sorted.sort((a, b) => b.timestamp - a.timestamp);
+                case 'oldest': return sorted.sort((a, b) => a.timestamp - b.timestamp);
+                case 'available': return sorted.filter(item => item.path !== "#");
+                default: return sorted;
             }
+        }
+
+        function checkCategory(itemCategory, activeCategory) {
+            if (activeCategory === 'all') return true;
+            if (Array.isArray(itemCategory)) return itemCategory.includes(activeCategory);
+            return itemCategory === activeCategory;
         }
 
         function renderCards() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const sortType = document.getElementById('sort-select').value;
-            
             const shopGrid = document.getElementById('shop-grid');
             const freeGrid = document.getElementById('free-grid');
 
             shopGrid.innerHTML = '';
             freeGrid.innerHTML = '';
 
+            const isShopTrulyEmpty = shopData.length === 0;
             let filteredShop = shopData.filter(item => 
-                item.name.toLowerCase().includes(searchTerm) || 
-                item.desc.toLowerCase().includes(searchTerm)
+                (item.name.toLowerCase().includes(searchTerm) || item.desc.toLowerCase().includes(searchTerm)) &&
+                checkCategory(item.category, activeShopCategory)
             );
-            
-            if (sortType !== 'available') {
-                filteredShop = sortData(filteredShop, sortType);
-            }
+            if (sortType !== 'available') filteredShop = sortData(filteredShop, sortType);
 
+            const isFreeTrulyEmpty = freeData.length === 0;
             let filteredFree = freeData.filter(item => 
-                item.name.toLowerCase().includes(searchTerm) || 
-                item.desc.toLowerCase().includes(searchTerm)
+                (item.name.toLowerCase().includes(searchTerm) || item.desc.toLowerCase().includes(searchTerm)) &&
+                checkCategory(item.category, activeFreeCategory)
             );
+            if (sortType === 'available') filteredFree = filteredFree.filter(item => item.path !== "#");
+            else filteredFree = sortData(filteredFree, sortType);
 
-            if (sortType === 'available') {
-                filteredFree = filteredFree.filter(item => item.path !== "#");
-            } else {
-                filteredFree = sortData(filteredFree, sortType);
-            }
-
-            if (filteredShop.length > 0) {
+            // Render Shop
+            if (isShopTrulyEmpty) {
+                shopGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><p>Still no prompt for sale</p></div>`;
+            } else if (filteredShop.length > 0) {
                 filteredShop.forEach((item, index) => {
                     const card = createShopCard(item);
                     card.style.animationDelay = `${index * 0.1}s`;
                     shopGrid.appendChild(card);
                 });
             } else {
-                const empty = document.createElement('div');
-                empty.className = 'empty-state';
-                empty.innerHTML = `<i class="fa-solid fa-box-open"></i><p>The shop is still empty</p>`;
-                shopGrid.appendChild(empty);
+                shopGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>No prompts found in this category</p></div>`;
             }
 
-            if (filteredFree.length > 0) {
+            // Render Free
+            if (isFreeTrulyEmpty) {
+                freeGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>Prompt free has not been released yet</p></div>`;
+            } else if (filteredFree.length > 0) {
                 filteredFree.forEach((item, index) => {
                     const card = createFreeCard(item);
                     card.style.animationDelay = `${index * 0.1}s`;
                     freeGrid.appendChild(card);
                 });
             } else {
-                const empty = document.createElement('div');
-                empty.className = 'empty-state';
-                empty.innerHTML = `<i class="fa-solid fa-folder-open"></i><p>No free prompts found</p>`;
-                freeGrid.appendChild(empty);
+                freeGrid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>No free prompts found in this category</p></div>`;
             }
         }
 
@@ -698,6 +814,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            renderCategoryMenus();
             renderCards();
             createParticles();
             document.getElementById('search-input').addEventListener('input', renderCards);
